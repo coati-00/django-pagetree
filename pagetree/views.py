@@ -1,4 +1,3 @@
-from annoying.decorators import render_to
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template.context import RequestContext
@@ -202,7 +201,6 @@ def exporter(request):
     return resp
 
 
-@render_to("revert_confirm.html")
 def revert_to_version(request, version_id):
     v = get_object_or_404(Version, pk=version_id)
     if request.method == "POST":
@@ -231,4 +229,6 @@ def revert_to_version(request, version_id):
 
         return HttpResponseRedirect(v.section.get_edit_url())
     else:
-        return dict(version=v)
+        return render_to_response(
+            "revert_confirm.html", dict(version=v),
+            context_instance=RequestContext(request))
